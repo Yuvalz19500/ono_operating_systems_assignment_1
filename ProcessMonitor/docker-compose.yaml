@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  processmonitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sleep 10000
