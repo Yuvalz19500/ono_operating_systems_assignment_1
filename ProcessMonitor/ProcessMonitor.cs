@@ -6,32 +6,17 @@ namespace ProcessMonitor
 {
     class ProcessMonitor
     {
+        private static int BYTES_TO_KB = 1024;
+        private static int BYTES_TO_MB = 1024 * 1024;
+
+
         private void PrintProcessesInfo(Process[] processes)
         {
             Console.WriteLine("Id\tMemory\tName");
             foreach (Process process in processes)
             {
                 string memoryUsage = FormatMemoryUsage(process.WorkingSet64);
-                Console.WriteLine("{0}\t{1}\t{2}", process.Id, memoryUsage, process.ProcessName);
-            }
-        }
-
-        private string FormatMemoryUsage(long memory)
-        {
-            const int KB = 1024;
-            const int MB = KB * 1024;
-
-            if (memory < KB)
-            {
-                return memory + " Bytes";
-            }
-            else if (memory < MB)
-            {
-                return (memory / KB) + " KB";
-            }
-            else
-            {
-                return (memory / MB) + " MB";
+                Console.WriteLine($"{process.Id}\t{memoryUsage}\t{process.ProcessName}");
             }
         }
 
@@ -74,6 +59,21 @@ namespace ProcessMonitor
                 PrintProcessesInfo(processes);
                 Console.WriteLine();
             }
+        }
+
+        private string FormatMemoryUsage(long memory)
+        {
+            if (memory < BYTES_TO_KB)
+            {
+                return memory + " Bytes";
+            }
+
+            if (memory < BYTES_TO_MB)
+            {
+                return (memory / BYTES_TO_KB) + " KB";
+            }
+            
+            return (memory / BYTES_TO_KB) + " MB";
         }
     }
 }
