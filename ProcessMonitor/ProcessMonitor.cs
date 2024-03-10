@@ -1,15 +1,19 @@
 ﻿using System.Diagnostics;
 
-
-
+// Define the namespace for the ProcessMonitor
 namespace ProcessMonitor
 {
+    // Class that monitors and displays information about the system processes.
     class ProcessMonitor
     {
+        // Constant for converting bytes to kilobytes.
         private static int BYTES_TO_KB = 1024;
+        
+        // Constant for converting bytes to megabytes.
         private static int BYTES_TO_MB = 1024 * 1024;
 
-
+        // Prints the information of the given processes to the console.
+        // Displays the process ID, memory usage, and process name in a tabular format.
         private void PrintProcessesInfo(Process[] processes)
         {
             Console.WriteLine("Id\tMemory\tName");
@@ -20,6 +24,7 @@ namespace ProcessMonitor
             }
         }
 
+        // Starts the process monitoring loop, allowing the user to sort and view processes based on different criteria.
         public void Run()
         {
             while (true)
@@ -61,6 +66,7 @@ namespace ProcessMonitor
             }
         }
 
+        // Formats the memory usage of a process for display, converting it into a readable string in terms of Bytes, KB, or MB.
         private string FormatMemoryUsage(long memory)
         {
             if (memory < BYTES_TO_KB)
@@ -77,4 +83,3 @@ namespace ProcessMonitor
         }
     }
 }
- 
