@@ -1,40 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Shell
 {
     class Shell
     {
+
         public void ExecuteSingleProcess(string sCommand)
         {
-            //Execute a single process.
-            //Need to handle & at the end of the command line.
-            //Need to handle > and < operators
-            //your code here
-            
-            throw new NotImplementedException();
+            ExecuteCommandParser commandParser = new(sCommand);
+
+            ProcessStartInfo startInfo = new()
+            {
+                UseShellExecute = string.IsNullOrEmpty(commandParser.OutputFile) && string.IsNullOrEmpty(commandParser.InputFile),
+                RedirectStandardOutput = !string.IsNullOrEmpty(commandParser.OutputFile),
+                RedirectStandardInput = !string.IsNullOrEmpty(commandParser.InputFile),
+                FileName = commandParser.ProcessFile,
+            };
+
+            Process p = new() { StartInfo = startInfo };
+            p.Start();
+
+            if (!string.IsNullOrEmpty(commandParser.InputFile))
+            {
+                var inputText = File.ReadAllText($"{commandParser.InputFile}.txt");
+                p.StandardInput.Write(inputText);
+
+                p.StandardInput.Close();
+            }
+
+            if (!commandParser.RunInBackground)
+            {
+                p.WaitForExit();
+            }
+
+            if (!string.IsNullOrEmpty(commandParser.OutputFile))
+            {
+                StreamWriter sw = new($"{commandParser.OutputFile}.txt");
+                sw.WriteLine(p.StandardOutput.ReadToEnd());
+
+                sw.Close();
+                p.StandardOutput.Close();
+            }
         }
         
         public void KillProcess(string sCommand)
         {
             string[] asCommand = sCommand.Split(' ');
-            int iPid = 0;
+            int iPid;
             if (int.TryParse(asCommand[1].Trim(), out iPid))
             {
-                //got process id
-                //your code here
-                throw new NotImplementedException();
+                Process p = Process.GetProcessById(iPid);
+                p.Kill();
             }
             else
             {
-                //kill process by name
-                //your code here
-                throw new NotImplementedException();
+                Process[] processes = Process.GetProcessesByName(asCommand[1]);
+                foreach ( Process p in processes )
+                {
+                    p.Kill();
+                }
             }
         }
+
         public void Execute(string sFullCommand)
         {
             try
@@ -47,7 +75,7 @@ namespace Shell
                 }
                 else if (sFullCommand == "exit")
                 {
-                    //Exit the program here
+                    Environment.Exit(0);
                 }
                 else
                 {
@@ -66,7 +94,7 @@ namespace Shell
             while (true)
             {
                 Console.Write(cLines + " >> ");
-                string sLine = Console.ReadLine();
+                string? sLine = Console.ReadLine();
                 Execute(sLine.Trim());
                 cLines++;
             }

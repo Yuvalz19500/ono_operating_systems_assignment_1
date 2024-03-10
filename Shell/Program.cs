@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.IO;
-
-namespace Shell
+﻿namespace Shell
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Shell shell = new Shell();
+            Shell shell = new();
             shell.Run();
         }
     }
