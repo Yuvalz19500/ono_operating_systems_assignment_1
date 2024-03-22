@@ -12,7 +12,7 @@ namespace Shell
 
             ProcessStartInfo startInfo = new()
             {
-                UseShellExecute = string.IsNullOrEmpty(commandParser.OutputFile) && string.IsNullOrEmpty(commandParser.InputFile),
+                UseShellExecute = false,
                 RedirectStandardOutput = !string.IsNullOrEmpty(commandParser.OutputFile),
                 RedirectStandardInput = !string.IsNullOrEmpty(commandParser.InputFile),
                 FileName = commandParser.ProcessFile,
