@@ -15,23 +15,23 @@ namespace Shell
                 UseShellExecute = false,
                 RedirectStandardOutput = !string.IsNullOrEmpty(commandParser.OutputFile),
                 RedirectStandardInput = !string.IsNullOrEmpty(commandParser.InputFile),
-                FileName = commandParser.ProcessFile,
+                FileName = @commandParser.ProcessFile,
             };
 
             Process p = new() { StartInfo = startInfo };
             p.Start();
 
-            if (!string.IsNullOrEmpty(commandParser.InputFile))
-            {
-                var inputText = File.ReadAllText($"{commandParser.InputFile}.txt");
-                p.StandardInput.Write(inputText);
-
-                p.StandardInput.Close();
-            }
-
             if (!commandParser.RunInBackground)
             {
                 p.WaitForExit();
+            }
+
+            if (!string.IsNullOrEmpty(commandParser.InputFile))
+            {
+                var inputText = File.ReadAllText($"{commandParser.InputFile}.txt");
+                p.StandardInput.Write(inputText); 
+
+                p.StandardInput.Close();
             }
 
             if (!string.IsNullOrEmpty(commandParser.OutputFile))
