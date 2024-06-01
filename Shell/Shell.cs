@@ -28,7 +28,7 @@ namespace Shell
 
             if (!string.IsNullOrEmpty(commandParser.InputFile))
             {
-                var inputText = File.ReadAllText($"{commandParser.InputFile}.txt");
+                var inputText = File.ReadAllText(commandParser.InputFile);
                 p.StandardInput.Write(inputText); 
 
                 p.StandardInput.Close();
@@ -36,7 +36,7 @@ namespace Shell
 
             if (!string.IsNullOrEmpty(commandParser.OutputFile))
             {
-                StreamWriter sw = new($"{commandParser.OutputFile}.txt");
+                StreamWriter sw = new(commandParser.OutputFile);
                 sw.WriteLine(p.StandardOutput.ReadToEnd());
 
                 sw.Close();
